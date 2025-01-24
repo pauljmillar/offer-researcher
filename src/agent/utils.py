@@ -1,10 +1,6 @@
-def deduplicate_and_format_sources(
-    search_response, max_tokens_per_source, include_raw_content=True
-):
+def deduplicate_sources(search_response: dict | list[dict]) -> list[dict]:
     """
-    Takes either a single search response or list of responses from Tavily API and formats them.
-    Limits the raw_content to approximately max_tokens_per_source.
-    include_raw_content specifies whether to include the raw_content from Tavily in the formatted string.
+    Takes either a single search response or list of responses from Tavily API and de-duplicates them based on the URL.
 
     Args:
         search_response: Either:
@@ -30,14 +26,37 @@ def deduplicate_and_format_sources(
         )
 
     # Deduplicate by URL
-    unique_sources = {}
+    unique_urls = set()
+    unique_sources_list = []
     for source in sources_list:
-        if source["url"] not in unique_sources:
-            unique_sources[source["url"]] = source
+        if source["url"] not in unique_urls:
+            unique_urls.add(source["url"])
+            unique_sources_list.append(source)
 
+    return unique_sources_list
+
+
+def format_sources(
+    sources_list: list[dict],
+    include_raw_content: bool = True,
+    max_tokens_per_source: int = 1000,
+) -> str:
+    """
+    Takes a list of unique results from Tavily API and formats them.
+    Limits the raw_content to approximately max_tokens_per_source.
+    include_raw_content specifies whether to include the raw_content from Tavily in the formatted string.
+
+    Args:
+        sources_list: list of unique results from Tavily API
+        max_tokens_per_source: int, maximum number of tokens per each search result to include in the formatted string
+        include_raw_content: bool, whether to include the raw_content from Tavily in the formatted string
+
+    Returns:
+        str: Formatted string with deduplicated sources
+    """
     # Format output
     formatted_text = "Sources:\n\n"
-    for i, source in enumerate(unique_sources.values(), 1):
+    for source in sources_list:
         formatted_text += f"Source {source['title']}:\n===\n"
         formatted_text += f"URL: {source['url']}\n===\n"
         formatted_text += (

@@ -68,6 +68,9 @@ class OverallState:
     search_queries: list[str] = field(default=None)
     "List of generated search queries to find relevant information"
 
+    search_results: list[dict] = field(default=None)
+    "List of search results"
+
     completed_notes: Annotated[list, operator.add] = field(default_factory=list)
     "Notes from completed research related to the schema"
 
@@ -99,3 +102,6 @@ class OutputState:
     based on the user's query and the graph's execution.
     This is the primary output of the enrichment process.
     """
+
+    search_results: list[dict] = field(default=None)
+    "List of search results"

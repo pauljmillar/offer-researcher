@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from agent.configuration import Configuration
 from agent.state import InputState, OutputState, OverallState
-from agent.utils import deduplicate_and_format_sources, format_all_notes
+from agent.utils import deduplicate_sources, format_sources, format_all_notes
 from agent.prompts import (
     EXTRACTION_PROMPT,
     REFLECTION_PROMPT,
@@ -120,8 +120,9 @@ async def research_company(
     search_docs = await asyncio.gather(*search_tasks)
 
     # Deduplicate and format sources
-    source_str = deduplicate_and_format_sources(
-        search_docs, max_tokens_per_source=1000, include_raw_content=True
+    deduplicated_search_docs = deduplicate_sources(search_docs)
+    source_str = format_sources(
+        deduplicated_search_docs, max_tokens_per_source=1000, include_raw_content=True
     )
 
     # Generate structured notes relevant to the extraction schema
@@ -132,7 +133,13 @@ async def research_company(
         user_notes=state.user_notes,
     )
     result = await claude_3_5_sonnet.ainvoke(p)
-    return {"completed_notes": [str(result.content)]}
+    state_update = {
+        "completed_notes": [str(result.content)],
+    }
+    if configurable.include_search_results:
+        state_update["search_results"] = deduplicated_search_docs
+
+    return state_update
 
 
 def gather_notes_extract_schema(state: OverallState) -> dict[str, Any]:
