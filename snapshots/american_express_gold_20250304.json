@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-03-04T23:30:58.974270",
+  "card_name": "Amex Gold",
+  "standardized_name": "american_express_gold",
+  "data": {
+    "card_name": "American Express\u00ae Gold Card",
+    "card_issuer": "American Express National Bank",
+    "card_network": "American Express",
+    "card_industry": "Premium rewards, dining and travel",
+    "has_annual_fee": "Y",
+    "regular_annual_fee": 325,
+    "first_late_fee": 39,
+    "ongoing_late_fee": 39,
+    "regular_apr_low": "Prime Rate + 12.74%",
+    "regular_apr_high": "Prime Rate + 19.74%",
+    "rewards_type": "Other Points",
+    "rewards_program_description": "Earn 4X points at restaurants worldwide (capped at $50,000/year, then 1X), 4X points at U.S. supermarkets (capped at $25,000/year, then 1X), 3X points on flights booked directly with airlines or AmexTravel.com, 2X points on prepaid hotels booked on AmexTravel.com, and 1X points on all other purchases.",
+    "rewards_expiration": "N",
+    "rewards_expiration_detail": "Points don't expire while account remains open and in good standing",
+    "rewards_redemption_options": "Points can be redeemed for travel bookings, gift cards, statement credits, transfer to airline/hotel partners, or pay with points at checkout with select merchants",
+    "alternative_payment_plans": "Plan It: Split purchases of $100+ into monthly installments with fixed fee; Pay Over Time: Option to carry balance with interest up to limit",
+    "contactless_payment": "Y",
+    "benefits": [
+      {
+        "benefit_description": "Up to $120 annual dining credit ($10 monthly) at Grubhub, The Cheesecake Factory, Goldbelly, Wine.com, Five Guys"
+      },
+      {
+        "benefit_description": "Up to $120 in annual Uber Cash ($10 monthly) for Uber Eats orders or Uber rides in U.S."
+      },
+      {
+        "benefit_description": "Up to $100 annual Resy Credit ($50 semi-annually) for U.S. Resy restaurants"
+      },
+      {
+        "benefit_description": "Up to $84 annual Dunkin' Credit ($7 monthly)"
+      },
+      {
+        "benefit_description": "The Hotel Collection: $100 credit for eligible charges on stays of 2+ nights"
+      },
+      {
+        "benefit_description": "No foreign transaction fees"
+      },
+      {
+        "benefit_description": "Choice of card design: Gold, Rose Gold, or Limited-Edition White Gold"
+      }
+    ],
+    "incentives": [
+      {
+        "incentive_description": "60,000 Membership Rewards points after spending $6,000 in first 6 months",
+        "incentive_type": "Points",
+        "incentive_value": 60000
+      },
+      {
+        "incentive_description": "20% back on eligible restaurant purchases worldwide (up to $100)",
+        "incentive_type": "Cash",
+        "incentive_value": 100
+      }
+    ]
+  },
+  "sources": []
+}

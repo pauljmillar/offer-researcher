@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-03-04T21:24:46.926312",
+  "timestamp": "2025-03-04T23:07:01.675296",
   "card_name": "Chase Sapphire Preferred",
   "standardized_name": "chase_sapphire_preferred",
   "data": {
@@ -10,44 +10,40 @@
     "has_annual_fee": "Y",
     "regular_annual_fee": 95,
     "regular_balance_transfer_fee": 5,
-    "first_late_fee": 40,
-    "ongoing_late_fee": 40,
+    "first_late_fee": 38,
+    "ongoing_late_fee": 38,
     "regular_apr_low": "20.49",
     "regular_apr_high": "27.49",
     "rewards_type": "Other Points",
-    "rewards_program_description": "Earn 5x points on travel purchased through Chase Travel\u2120, 3x points on dining, select streaming services, and online groceries, 2x points on other travel purchases, and 1x points on all other purchases. Points are worth 25% more when redeemed through Chase Travel portal (1.25 cents per point). 10% anniversary points bonus included.",
+    "rewards_program_description": "Earn 5X points on travel purchased through Chase Travel portal, 3X points on dining, select streaming services, and online groceries, 2X points on other travel purchases, and 1X points on all other purchases. Additional 5X points on Lyft rides through March 2025. 10% anniversary points bonus on total purchases made in the previous year.",
     "rewards_expiration": "N",
     "rewards_expiration_detail": "Points don't expire while account remains open",
-    "rewards_redemption_options": "Can transfer points 1:1 to travel partners including major airlines and hotels. Redeem through Chase Travel portal for 25% more value. Other options include cash back, gift cards, and merchandise.",
-    "alternative_payment_plans": "My Chase Plan available - allows installment payments on purchases $100+ with monthly fee up to 1.72% of transaction amount. Terms 3-18 months available.",
+    "rewards_redemption_options": "Points can be redeemed for travel through Chase portal (25% bonus value), 1:1 point transfers to travel partners, statement credits, gift cards, or merchandise. No blackout dates when booking through Chase Travel.",
     "contactless_payment": "Y",
     "benefits": [
       {
-        "benefit_description": "Primary rental car insurance"
+        "benefit_description": "$50 annual hotel credit for stays purchased through Chase Travel"
+      },
+      {
+        "benefit_description": "Primary rental car insurance coverage"
       },
       {
         "benefit_description": "Trip cancellation/interruption insurance"
       },
       {
-        "benefit_description": "Baggage delay insurance"
-      },
-      {
         "benefit_description": "Trip delay reimbursement"
       },
       {
-        "benefit_description": "Travel accident insurance"
+        "benefit_description": "Lost luggage reimbursement"
       },
       {
-        "benefit_description": "Travel & emergency assistance services"
+        "benefit_description": "Baggage delay insurance"
       },
       {
-        "benefit_description": "$50 annual hotel credit for bookings through Chase Travel portal"
+        "benefit_description": "Free DoorDash DashPass membership through 2027"
       },
       {
-        "benefit_description": "Extended warranty protection"
-      },
-      {
-        "benefit_description": "Purchase protection"
+        "benefit_description": "Up to $10 off monthly on non-restaurant DoorDash orders"
       },
       {
         "benefit_description": "No foreign transaction fees"
@@ -55,7 +51,7 @@
     ],
     "incentives": [
       {
-        "incentive_description": "60,000 bonus points after spending $4,000 in first 3 months",
+        "incentive_description": "Earn 60,000 bonus points after spending $4,000 in first 3 months",
         "incentive_type": "Points",
         "incentive_value": 60000
       }

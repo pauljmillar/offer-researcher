@@ -1,0 +1,14 @@
+monitoring:
+  schedule: "0 0 * * *"  # Daily at midnight
+  cards:
+    - name: "Chase Sapphire Preferred"
+      issuer: "Chase"
+      active: true
+    - name: "Amex Gold Card"
+      issuer: "American Express"
+      active: true
+
+notification:
+  email:
+    recipients: ["user@example.com"]
+    summary_threshold: 5  # Min changes to trigger summary 

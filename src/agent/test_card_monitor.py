@@ -6,6 +6,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from agent.graph import graph
 from agent.state import DEFAULT_EXTRACTION_SCHEMA, InputState
+from agent.config import CardConfig, load_monitoring_settings
+from typing import List
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -48,46 +50,48 @@ async def run_single_card(card_name: str):
     logger.info(f"Starting research for card: {input_state.card}")
     return await graph.ainvoke(input_state)
 
+async def process_cards(cards: List[CardConfig], parallel: bool = False) -> List[dict]:
+    """Process multiple cards either sequentially or in parallel."""
+    results = []
+    
+    if parallel:
+        # Process cards in parallel
+        tasks = [run_single_card(card.name) for card in cards if card.active]
+        results = await asyncio.gather(*tasks)
+    else:
+        # Process cards sequentially
+        for card in cards:
+            if card.active:
+                result = await run_single_card(card.name)
+                results.append(result)
+                # Add delay between cards to manage rate limits
+                await asyncio.sleep(5)
+    
+    return results
+
 if __name__ == "__main__":
     # Load environment variables
     load_dotenv()
     
-    # Check if running in batch mode
-    BATCH_MODE = os.getenv("BATCH_MODE", "false").lower() == "true"
+    # Load configuration
+    config = load_monitoring_settings()
     
-    # Example card
-    card_name = "Chase Sapphire Preferred"
-    
-    # Run in appropriate mode
-    result = asyncio.run(
-        run_card_batch_mode(card_name) if BATCH_MODE 
-        else run_card_with_langsmith(card_name)
+    # Process all active cards
+    results = asyncio.run(
+        process_cards(
+            config.monitoring.cards,
+            parallel=os.getenv("PARALLEL", "false").lower() == "true"
+        )
     )
     
-    # Print results
-    print("\n=== Results ===")
-    print(f"Card: {card_name}")
-    print(f"Is satisfactory: {getattr(result, 'is_satisfactory', False)}")
-    print(f"Reflection steps taken: {getattr(result, 'reflection_steps_taken', 0)}")
-    print(f"\nReflection reasoning: {getattr(result, 'reflection_reasoning', '')}")
-    
-    missing_fields = getattr(result, 'missing_fields', [])
-    if missing_fields:
-        print("\nMissing or incomplete fields:")
-        for field in missing_fields:
-            print(f"- {field}")
-    
-    snapshot_file = getattr(result, 'snapshot_file', None)
-    if snapshot_file:
-        print(f"\nSnapshot saved to: {snapshot_file}")
-    
-    changes = getattr(result, 'changes', [])
-    if changes:
-        print("\nChanges detected:")
-        for change in changes:
-            print(f"\nField: {change['field']}")
-            print(f"  Old value: {change['old_value']}")
-            print(f"  New value: {change['new_value']}")
-            print(f"  Verified: {change['verified']}")
-    else:
-        print("\nNo changes detected from previous snapshot")
+    # Print summary
+    print("\n=== Monitoring Summary ===")
+    for card, result in zip(config.monitoring.cards, results):
+        if not card.active:
+            continue
+        print(f"\nCard: {card.name}")
+        print(f"Changes detected: {bool(result.get('changes', []))}")
+        if result.get('changes'):
+            print("\nChanges:")
+            for change in result['changes']:
+                print(f"- {change['field']}: {change['old_value']} -> {change['new_value']}")

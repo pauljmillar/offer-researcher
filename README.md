@@ -284,3 +284,21 @@ To run the evaluation, you can use the `run_eval.py` script in the `eval` folder
 ```shell
 python eval/run_eval.py --experiment-prefix "My custom prefix" --agent-url http://localhost:2024
 ```
+
+### Run card batch in sequential mode
+
+```shell
+PYTHONPATH=src python src/agent/test_card_monitor.py
+```
+
+### Run card batch in parallel
+
+```shell
+PYTHONPATH=src python src/agent/test_card_monitor.py --parallel
+```
+### Run langgraph server
+
+```shell
+uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
+```
+

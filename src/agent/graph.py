@@ -26,7 +26,7 @@ from pydantic import BaseModel, Field
 from langchain_community.cache import SQLiteCache
 from langchain.globals import set_llm_cache
 
-from agent.configuration import Configuration
+from agent.config import Configuration
 from agent.state import InputState, OutputState, OverallState
 from agent.utils import deduplicate_sources, format_sources, format_all_notes
 from agent.prompts import (
