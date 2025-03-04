@@ -63,12 +63,14 @@ def generate_queries(state: OverallState, config: RunnableConfig) -> dict[str, A
     # Generate search queries
     structured_llm = claude_3_5_sonnet.with_structured_output(Queries)
 
-    # Format system instructions
+    # Format system instructions with missing fields info
     query_instructions = QUERY_WRITER_PROMPT.format(
         card=state.card,
         info=json.dumps(state.extraction_schema, indent=2),
         user_notes=state.user_notes,
         max_search_queries=max_search_queries,
+        missing_fields=", ".join(state.missing_fields) if state.missing_fields else "all fields",
+        reflection_reasoning=state.reflection_reasoning if state.reflection_reasoning else "Initial search"
     )
 
     # Generate queries
