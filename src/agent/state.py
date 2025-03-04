@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Optional, Annotated
 import operator
+from pydantic import BaseModel, Field, ConfigDict
 
 
 DEFAULT_EXTRACTION_SCHEMA = {
@@ -167,80 +168,41 @@ DEFAULT_EXTRACTION_SCHEMA = {
 }
 
 
-@dataclass(kw_only=True)
-class InputState:
-    """Input state defines the interface between the graph and the user (external API)."""
-
-    card: str
-    "Credit card to research provided by the user."
-
-    extraction_schema: dict[str, Any] = field(
-        default_factory=lambda: DEFAULT_EXTRACTION_SCHEMA
+class BaseStateModel(BaseModel):
+    """Base model with common configuration."""
+    model_config = ConfigDict(
+        extra='forbid',
+        frozen=False,  # Allow field updates
+        validate_assignment=True,
+        revalidate_instances='always'
     )
-    "The json schema defines the information the agent is tasked with filling out."
 
-    user_notes: Optional[dict[str, Any]] = field(default=None)
-    "Any notes from the user to start the research process."
-
-
-@dataclass(kw_only=True)
-class OverallState:
-    """Input state defines the interface between the graph and the user (external API)."""
-
+    # Define common fields that all states will inherit
     card: str
-    "Credit card to research provided by the user."
+    user_notes: str = Field(default="")
+    extraction_schema: dict[str, Any] = Field(default_factory=lambda: DEFAULT_EXTRACTION_SCHEMA)
+    search_queries: Annotated[list[str], operator.add] = Field(default_factory=list)
+    search_results: list[dict] = Field(default_factory=list)
+    completed_notes: Annotated[list[str], operator.add] = Field(default_factory=list)
+    info: Optional[dict[str, Any]] = Field(default=None)
+    is_satisfactory: bool = Field(default=False)
+    reflection_steps_taken: int = Field(default=0)
+    reflection_reasoning: str = Field(default="")
+    missing_fields: list[str] = Field(default_factory=list)
+    changes: list[dict] = Field(default_factory=list)
+    verification_needed: bool = Field(default=False)
+    snapshot_file: Optional[str] = Field(default=None)
+    comparison_steps_taken: int = Field(default=0)
 
-    extraction_schema: dict[str, Any] = field(
-        default_factory=lambda: DEFAULT_EXTRACTION_SCHEMA
-    )
-    "The json schema defines the information the agent is tasked with filling out."
+# Inherit all fields from BaseStateModel
+class InputState(BaseStateModel):
+    """Input state defines the interface between the graph and the user."""
+    pass
 
-    user_notes: str = field(default=None)
-    "Any notes from the user to start the research process."
+class OverallState(BaseStateModel):
+    """The overall state of the graph."""
+    pass
 
-    search_queries: list[str] = field(default=None)
-    "List of generated search queries to find relevant information"
-
-    search_results: list[dict] = field(default=None)
-    "List of search results"
-
-    completed_notes: Annotated[list, operator.add] = field(default_factory=list)
-    "Notes from completed research related to the schema"
-
-    info: dict[str, Any] = field(default=None)
-    """
-    A dictionary containing the extracted and processed information
-    based on the user's query and the graph's execution.
-    This is the primary output of the enrichment process.
-    """
-
-    is_satisfactory: bool = field(default=None)
-    "True if all required fields are well populated, False otherwise"
-
-    reflection_steps_taken: int = field(default=0)
-    "Number of times the reflection node has been executed"
-
-    reflection_reasoning: str = field(default="")
-    "Reasoning for the reflection step"
-
-    missing_fields: list[str] = field(default_factory=list)
-    "List of missing fields"
-
-
-@dataclass(kw_only=True)
-class OutputState:
-    """The response object for the end user.
-
-    This class defines the structure of the output that will be provided
-    to the user after the graph's execution is complete.
-    """
-
-    info: dict[str, Any]
-    """
-    A dictionary containing the extracted and processed information
-    based on the user's query and the graph's execution.
-    This is the primary output of the enrichment process.
-    """
-
-    search_results: list[dict] = field(default=None)
-    "List of search results"
+class OutputState(BaseStateModel):
+    """The output state of the graph."""
+    pass

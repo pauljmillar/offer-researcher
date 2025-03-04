@@ -1,0 +1,57 @@
+{
+  "timestamp": "2025-03-03T21:27:00.276972",
+  "card_name": "CapOne Venture Rewards",
+  "standardized_name": "capital_one_venture_rewards_credit",
+  "data": {
+    "card_name": "Capital One Venture Rewards Credit Card",
+    "card_issuer": "Capital One",
+    "card_network": "Visa",
+    "card_industry": "Travel rewards",
+    "has_annual_fee": "Y",
+    "regular_annual_fee": 95,
+    "first_late_fee": 40,
+    "ongoing_late_fee": 40,
+    "regular_apr_low": "19.99",
+    "regular_apr_high": "29.24",
+    "rewards_type": "Other Points",
+    "rewards_program_description": "Earn unlimited 2X miles on all purchases. Earn 5X miles on hotels, vacation rentals, and rental cars booked through Capital One Travel. Earn 5X miles on Capital One Entertainment purchases (through 12/31/25).",
+    "rewards_expiration": "Y",
+    "rewards_expiration_detail": "Miles don't expire while account is open and in good standing, but will be forfeited if account is closed.",
+    "rewards_trigger": "N",
+    "rewards_redemption_options": "Miles can be redeemed through Capital One Travel portal, transferred to travel partners, or redeemed for past travel purchases.",
+    "contactless_payment": "Y",
+    "benefits": [
+      {
+        "benefit_description": "Global Entry or TSA PreCheck credit (once every 4 years)"
+      },
+      {
+        "benefit_description": "Rental car coverage"
+      },
+      {
+        "benefit_description": "Purchase security and extended protection"
+      },
+      {
+        "benefit_description": "No foreign transaction fees"
+      },
+      {
+        "benefit_description": "Virtual card numbers"
+      },
+      {
+        "benefit_description": "24/7 customer service"
+      }
+    ],
+    "incentives": [
+      {
+        "incentive_description": "75,000 bonus miles after spending $4,000 in first 3 months",
+        "incentive_type": "Miles",
+        "incentive_value": 75000
+      },
+      {
+        "incentive_description": "$250 Capital One Travel credit valid for first cardholder year",
+        "incentive_type": "Cash",
+        "incentive_value": 250
+      }
+    ]
+  },
+  "sources": []
+}

@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-03-03T19:16:11.456554",
+  "card_name": "Chase Sapphire Preferred",
+  "data": {
+    "card_name": "Chase Sapphire Preferred\u00ae Card",
+    "card_issuer": "Chase",
+    "card_network": "Visa",
+    "card_industry": "Travel & Dining",
+    "has_annual_fee": "Y",
+    "regular_annual_fee": 95,
+    "regular_balance_transfer_fee": 5,
+    "regular_apr_low": "20.49",
+    "regular_apr_high": "27.49",
+    "rewards_type": "Other Points",
+    "rewards_program_description": "Earn 5x points on travel purchased through Chase Travel, 3x points on dining, select streaming services, and online groceries, 2x points on all other travel purchases, and 1x points on general purchases. Special promotion of 5x points on Lyft rides through March 2025.",
+    "rewards_expiration": "N",
+    "rewards_redemption_options": "Points can be redeemed for travel through Chase portal (with 25% bonus value), 1:1 transfer to airline and hotel partners, cash back, or gift cards. Points are worth approximately 1.55 cents each.",
+    "contactless_payment": "Y",
+    "benefits": [
+      {
+        "benefit_description": "$50 annual hotel credit for bookings through Chase Travel"
+      },
+      {
+        "benefit_description": "10% anniversary points bonus"
+      },
+      {
+        "benefit_description": "Primary rental car insurance"
+      },
+      {
+        "benefit_description": "Trip cancellation/interruption insurance"
+      },
+      {
+        "benefit_description": "Travel and purchase protections"
+      },
+      {
+        "benefit_description": "No foreign transaction fees"
+      }
+    ],
+    "incentives": [
+      {
+        "incentive_description": "Earn 60,000 bonus points after spending $4,000 in first 3 months, worth $750 when redeemed for travel through Chase",
+        "incentive_type": "Points",
+        "incentive_value": 60000
+      }
+    ]
+  },
+  "sources": null
+}

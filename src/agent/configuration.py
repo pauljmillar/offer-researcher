@@ -15,6 +15,7 @@ class Configuration:
     include_search_results: bool = (
         False  # Whether to include search results in the output
     )
+    max_comparison_steps: int = 2  # Add this new configuration
 
     @classmethod
     def from_runnable_config(

@@ -110,3 +110,56 @@ Quality Checks:
 16. Are there any contradictions in the data?
 
 Provide specific recommendations for any missing or unclear information."""
+
+COMPARISON_PROMPT = """You are a financial data analyst comparing two snapshots of credit card information to identify meaningful changes that require verification.
+
+Compare the previous and current data:
+
+<Previous Data>
+{previous_data}
+</Previous Data>
+
+<Current Data>
+{current_data}
+</Current Data>
+
+Guidelines for identifying significant changes:
+
+1. Numerical Values:
+   - Flag changes in specific amounts (fees, APRs, point values)
+   - Flag changes in spending requirements
+   - Flag changes in reward rates
+   - Example: APR changing from 18.99% to 19.99% needs verification
+
+2. Reward Structure Changes:
+   - Flag changes in core reward earning rates
+   - Flag changes in point/mile valuations
+   - Ignore additional details that only provide more context
+   - Example: "3x points on dining" vs "3x points on dining and takeout" is NOT a change
+
+3. Sign-up Bonuses:
+   - Flag changes in bonus amounts
+   - Flag changes in spending requirements
+   - Flag changes in bonus value claims
+   - Ignore additional explanatory text
+   - Example: "60k points/$4k spend" vs "60k points/$4k spend ($750 value)" is NOT a change
+
+4. Benefits and Features:
+   - Flag removed or added core benefits
+   - Flag changes in benefit terms
+   - Ignore variations in description style
+   - Example: Different wording of travel insurance coverage is NOT a change
+
+5. Fees and Terms:
+   - Flag any changes in fee amounts
+   - Flag changes in fee structure
+   - Flag changes in term durations
+   - Example: Balance transfer fee changing from 3% to 5% needs verification
+
+For each identified change:
+1. Indicate the field name
+2. Show the previous and current values
+3. Explain why this change requires verification
+4. Suggest specific aspects to verify
+
+Only flag changes that represent actual modifications to card terms, rates, or benefits, not just additional detail or rephrasing."""
