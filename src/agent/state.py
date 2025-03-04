@@ -4,33 +4,166 @@ import operator
 
 
 DEFAULT_EXTRACTION_SCHEMA = {
-    "title": "CompanyInfo",
-    "description": "Basic information about a company",
+    "title": "CreditCardInfo",
+    "description": "Comprehensive credit card information including attributes, fees, APRs, rewards, and benefits",
     "type": "object",
     "properties": {
-        "company_name": {
+        # Basic Card Info
+        "card_name": {
             "type": "string",
-            "description": "Official name of the company",
+            "description": "The name of the credit card."
         },
-        "founding_year": {
-            "type": "integer",
-            "description": "Year the company was founded",
+        "card_issuer": {
+            "type": "string",
+            "description": "The bank or financial institution that extends the line of credit."
         },
-        "founder_names": {
+        "card_network": {
+            "type": "string",
+            "description": "The company that helps process each of your transactions.",
+            "enum": ["American Express", "Discover", "Mastercard", "Visa"]
+        },
+        "card_industry": {
+            "type": "string",
+            "description": "The industry that the credit card specializes in."
+        },
+        # Fees
+        "has_annual_fee": {
+            "type": "string",
+            "description": "Whether there is an annual fee for the card.",
+            "enum": ["Y", "N"]
+        },
+        "intro_annual_fee": {
+            "type": "number",
+            "description": "Annual fee amount for the during the introductory period."
+        },
+        "regular_annual_fee": {
+            "type": "number",
+            "description": "Annual fee amount ongoing, after the introductory period."
+        },
+        "intro_balance_transfer_fee": {
+            "type": "number",
+            "description": "Balance transfer fee amount during the introductory period."
+        },
+        "regular_balance_transfer_fee": {
+            "type": "number",
+            "description": "Balance transfer fee amount after the introductory period."
+        },
+        "first_late_fee": {
+            "type": "number",
+            "description": "Late fee charged for the FIRST infraction."
+        },
+        "ongoing_late_fee": {
+            "type": "number",
+            "description": "Late fee charged AFTER the first infraction."
+        },
+        # APRs
+        "regular_apr_low": {
+            "type": "string",
+            "description": "For the regular APR, what is the LOWEST end of the range."
+        },
+        "regular_apr_high": {
+            "type": "string",
+            "description": "For the regular APR, what is the HIGHEST end of the range."
+        },
+        "intro_purchase_apr": {
+            "type": "number",
+            "description": "APR on purchases during the introductory period."
+        },
+        "intro_purchase_apr_duration": {
+            "type": "number",
+            "description": "In months, the duration of the introductory APR period for purchases."
+        },
+        "intro_balance_transfer_apr": {
+            "type": "number",
+            "description": "APR on balance transfers during the introductory period."
+        },
+        "intro_balance_transfer_apr_duration": {
+            "type": "number",
+            "description": "In months, the duration of the introductory APR period for balance transfers."
+        },
+        # Rewards
+        "rewards_type": {
+            "type": "string",
+            "description": "The type of rewards offered by this credit card.",
+            "enum": ["Airline Miles", "Hotel Points", "Other Points", "Cash Back", "Other"]
+        },
+        "rewards_program_description": {
+            "type": "string",
+            "description": "A text description of the rewards program. This should explain the categories and earn rates, etc."
+        },
+        "rewards_expiration": {
+            "type": "string",
+            "description": "Do the rewards expire?",
+            "enum": ["Y", "N"]
+        },
+        "rewards_expiration_detail": {
+            "type": "string",
+            "description": "An explanation of the rewards expiration policy."
+        },
+        "rewards_trigger": {
+            "type": "string",
+            "description": "Whether there is a rewards trigger.",
+            "enum": ["Y", "N"]
+        },
+        "rewards_trigger_detail": {
+            "type": "string",
+            "description": "An explanation of the rewards trigger."
+        },
+        "rewards_redemption_options": {
+            "type": "string",
+            "description": "Information about the process or limitations relating to the rewards redemption."
+        },
+        # Benefits
+        "alternative_payment_plans": {
+            "type": "string",
+            "description": "List alternative payment plans offered by the card, if any, including Amex Pay It, Plan It; Citi Flex Pay/Plan, My Chase Plan/Loan."
+        },
+        "contactless_payment": {
+            "type": "string",
+            "description": "Does the card offer contactless payment, also referred to as tap-to-pay?",
+            "enum": ["Y", "N"]
+        },
+        "benefits": {
             "type": "array",
-            "items": {"type": "string"},
-            "description": "Names of the founding team members",
+            "items": {"$ref": "#/$defs/Benefits"}
         },
-        "product_description": {
-            "type": "string",
-            "description": "Brief description of the company's main product or service",
-        },
-        "funding_summary": {
-            "type": "string",
-            "description": "Summary of the company's funding history",
-        },
+        "incentives": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/Incentives"}
+        }
     },
-    "required": ["company_name"],
+    "$defs": {
+        "Incentives": {
+            "type": "object",
+            "description": "Incentives offered to encourage a new card holder to apply",
+            "properties": {
+                "incentive_description": {
+                    "type": "string",
+                    "description": "Text description of the incentive offer."
+                },
+                "incentive_type": {
+                    "type": "string",
+                    "description": "The categorization of the incentive.",
+                    "enum": ["Rewards", "Miles", "Cash", "Points", "Low Introductory Rate"]
+                },
+                "incentive_value": {
+                    "type": "number",
+                    "description": "The amount of the incentive offer."
+                }
+            }
+        },
+        "Benefits": {
+            "type": "object",
+            "description": "Benefits offered to card holders",
+            "properties": {
+                "benefit_description": {
+                    "type": "string",
+                    "description": "Text description of the benefit."
+                }
+            }
+        }
+    },
+    "required": ["card_name", "card_issuer", "card_network"]
 }
 
 
@@ -38,8 +171,8 @@ DEFAULT_EXTRACTION_SCHEMA = {
 class InputState:
     """Input state defines the interface between the graph and the user (external API)."""
 
-    company: str
-    "Company to research provided by the user."
+    card: str
+    "Credit card to research provided by the user."
 
     extraction_schema: dict[str, Any] = field(
         default_factory=lambda: DEFAULT_EXTRACTION_SCHEMA
@@ -54,8 +187,8 @@ class InputState:
 class OverallState:
     """Input state defines the interface between the graph and the user (external API)."""
 
-    company: str
-    "Company to research provided by the user."
+    card: str
+    "Credit card to research provided by the user."
 
     extraction_schema: dict[str, Any] = field(
         default_factory=lambda: DEFAULT_EXTRACTION_SCHEMA
@@ -86,6 +219,12 @@ class OverallState:
 
     reflection_steps_taken: int = field(default=0)
     "Number of times the reflection node has been executed"
+
+    reflection_reasoning: str = field(default="")
+    "Reasoning for the reflection step"
+
+    missing_fields: list[str] = field(default_factory=list)
+    "List of missing fields"
 
 
 @dataclass(kw_only=True)

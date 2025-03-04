@@ -65,7 +65,7 @@ def generate_queries(state: OverallState, config: RunnableConfig) -> dict[str, A
 
     # Format system instructions
     query_instructions = QUERY_WRITER_PROMPT.format(
-        company=state.company,
+        card=state.card,
         info=json.dumps(state.extraction_schema, indent=2),
         user_notes=state.user_notes,
         max_search_queries=max_search_queries,
@@ -90,19 +90,24 @@ def generate_queries(state: OverallState, config: RunnableConfig) -> dict[str, A
     return {"search_queries": query_list}
 
 
-async def research_company(
+async def research_card(
     state: OverallState, config: RunnableConfig
 ) -> dict[str, Any]:
-    """Execute a multi-step web search and information extraction process.
-
-    This function performs the following steps:
-    1. Executes concurrent web searches using the Tavily API
-    2. Deduplicates and formats the search results
-    """
+    """Execute a multi-step web search and information extraction process."""
 
     # Get configuration
     configurable = Configuration.from_runnable_config(config)
     max_search_results = configurable.max_search_results
+
+    # Track previously seen URLs to avoid duplicates across iterations
+    previously_seen_urls = set()
+    search_results = getattr(state, "search_results", [])
+    if search_results:  # Only process if search_results exists and is not None
+        previously_seen_urls = set(
+            result["url"] 
+            for results in search_results 
+            for result in results
+        )
 
     # Search tasks
     search_tasks = []
@@ -113,6 +118,7 @@ async def research_company(
                 max_results=max_search_results,
                 include_raw_content=True,
                 topic="general",
+                exclude_domains=list(previously_seen_urls)  # Exclude previously seen URLs
             )
         )
 
@@ -129,7 +135,7 @@ async def research_company(
     p = INFO_PROMPT.format(
         info=json.dumps(state.extraction_schema, indent=2),
         content=source_str,
-        company=state.company,
+        card=state.card,
         user_notes=state.user_notes,
     )
     result = await claude_3_5_sonnet.ainvoke(p)
@@ -187,21 +193,30 @@ def reflection(state: OverallState) -> dict[str, Any]:
     )
 
     if result.is_satisfactory:
-        return {"is_satisfactory": result.is_satisfactory}
+        return {
+            "is_satisfactory": result.is_satisfactory,
+            "reflection_reasoning": "Information is complete and satisfactory"
+        }
     else:
         return {
             "is_satisfactory": result.is_satisfactory,
             "search_queries": result.search_queries,
             "reflection_steps_taken": state.reflection_steps_taken + 1,
+            "reflection_reasoning": result.reasoning,
+            "missing_fields": result.missing_fields  # Also include missing fields for better visibility
         }
 
 
 def route_from_reflection(
     state: OverallState, config: RunnableConfig
-) -> Literal[END, "research_company"]:  # type: ignore
+) -> Literal[END, "research_card"]:  # type: ignore
     """Route the graph based on the reflection output."""
     # Get configuration
     configurable = Configuration.from_runnable_config(config)
+
+    # Log the reflection reasoning
+    print(f"Reflection reasoning: {state.reflection_reasoning}")
+    print(f"Missing fields: {getattr(state, 'missing_fields', [])}")
 
     # If we have satisfactory results, end the process
     if state.is_satisfactory:
@@ -209,7 +224,7 @@ def route_from_reflection(
 
     # If results aren't satisfactory but we haven't hit max steps, continue research
     if state.reflection_steps_taken <= configurable.max_reflection_steps:
-        return "research_company"
+        return "research_card"
 
     # If we've exceeded max steps, end even if not satisfactory
     return END
@@ -224,12 +239,12 @@ builder = StateGraph(
 )
 builder.add_node("gather_notes_extract_schema", gather_notes_extract_schema)
 builder.add_node("generate_queries", generate_queries)
-builder.add_node("research_company", research_company)
+builder.add_node("research_card", research_card)
 builder.add_node("reflection", reflection)
 
 builder.add_edge(START, "generate_queries")
-builder.add_edge("generate_queries", "research_company")
-builder.add_edge("research_company", "gather_notes_extract_schema")
+builder.add_edge("generate_queries", "research_card")
+builder.add_edge("research_card", "gather_notes_extract_schema")
 builder.add_edge("gather_notes_extract_schema", "reflection")
 builder.add_conditional_edges("reflection", route_from_reflection)
 
